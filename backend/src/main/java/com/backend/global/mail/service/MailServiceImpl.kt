@@ -1,49 +1,42 @@
 package com.backend.global.mail.service;
 
-import com.backend.global.mail.util.MailSender;
-import com.backend.global.mail.util.TemplateMaker;
-import com.backend.global.mail.util.TemplateName;
-import jakarta.mail.internet.MimeMessage;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.stereotype.Service;
+
+import com.backend.global.mail.util.MailSender
+import com.backend.global.mail.util.TemplateMaker
+import com.backend.global.mail.util.TemplateName
+import io.github.oshai.kotlinlogging.KotlinLogging
+import org.springframework.beans.factory.annotation.Value
+import org.springframework.scheduling.annotation.Async
+import org.springframework.stereotype.Service
+
+private val log = KotlinLogging.logger {}
 
 @Service
-@RequiredArgsConstructor
-@Slf4j
-public class MailServiceImpl implements MailService {
-	@Value("${mail.chat-url}")
-	private String chatUrl;
-	private final TemplateMaker templateMaker;
-	private final MailSender mailSender;
+class MailServiceImpl : MailService {
+    @Value("\${mail.chat_url}")
+    lateinit var chatUrl: String
+    lateinit var templateMaker: TemplateMaker
+    lateinit var mailSender: MailSender
 
-	@Async("threadPoolTaskExecutor")
-	@Override
-	public void sendDeliveryStartEmail(List<String> to, TemplateName templateName, Long postId) {
-		StringBuilder titleBuilder = new StringBuilder();
-		Map<String, String> htmlParameterMap = new HashMap<>();
+    @Async("threadPoolTaskExecutor")
+    override fun sendDeliveryStartEmail(to:List<String>, templateName: TemplateName, postId: Long) {
+        val titleBuilder = StringBuilder()
+        val htmlParameterMap = mutableMapOf<String, String>()
 
-		switch (templateName) {
-			case RECRUITMENT_CHAT -> {
-				titleBuilder.append("[TEAM9] 모집 완료 안내 메일 입니다.");
-			}
-		}
+        when (templateName) {
+            TemplateName.RECRUITMENT_CHAT -> titleBuilder.append("[TEAM9] 모집 완료 안내 메일 입니다.")
+        }
 
-		String title = titleBuilder.toString();
-		String chatUrlToString = chatUrl + postId;
+        val title = titleBuilder.toString()
+        val chatUrlToString = "$chatUrl$postId"
 
-		htmlParameterMap.put("chatUrl", chatUrlToString);
+        htmlParameterMap["chatUrl"] = chatUrlToString
 
-		log.info(htmlParameterMap.get("chatUrl"));
+        log.info { htmlParameterMap["chatUrl"] }
 
-		MimeMessage mimeMessage = templateMaker
-			.create(mailSender.createMimeMessage(), to, title, templateName, htmlParameterMap);
+        val mimeMessage =
+            templateMaker.create(mailSender.createMimeMessage(), to, title, templateName, htmlParameterMap)
 
-		mailSender.send(mimeMessage);
-	}
+        mailSender.send(mimeMessage)
+    }
 }
