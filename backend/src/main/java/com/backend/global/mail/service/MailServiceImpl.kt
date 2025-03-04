@@ -12,11 +12,12 @@ import org.springframework.stereotype.Service
 private val log = KotlinLogging.logger {}
 
 @Service
-class MailServiceImpl : MailService {
+class MailServiceImpl(
     @Value("\${mail.chat_url}")
-    lateinit var chatUrl: String
-    lateinit var templateMaker: TemplateMaker
-    lateinit var mailSender: MailSender
+    private val chatUrl: String,
+    private val templateMaker: TemplateMaker,
+    private val mailSender: MailSender
+) : MailService {
 
     @Async("threadPoolTaskExecutor")
     override fun sendDeliveryStartEmail(to:List<String>, templateName: TemplateName, postId: Long) {
