@@ -4,10 +4,10 @@ import com.backend.domain.category.entity.Category;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface CategoryRepository extends JpaRepository<Category, Long> {
+interface CategoryRepository : JpaRepository<Category, Long> {
 
     // 중복 검사
-    boolean existsByName(String name);
+    fun existsByName(name: String): Boolean
 
-    Optional<Category> findByName(String categoryName);
+    fun findByName(categoryName: String): Optional<Category>
 }
