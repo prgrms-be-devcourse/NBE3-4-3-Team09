@@ -1,8 +1,8 @@
-package com.backend.domain.category.repository;
+package com.backend.domain.category.repository
 
-import com.backend.domain.category.entity.Category;
-import java.util.Optional;
-import org.springframework.data.jpa.repository.JpaRepository;
+import com.backend.domain.category.entity.Category
+import org.springframework.data.jpa.repository.JpaRepository
+import java.util.*
 
 interface CategoryRepository : JpaRepository<Category, Long> {
 
