@@ -77,8 +77,10 @@ class JwtAuthorizationFilter(
         val newAccessToken = jwtUtil.createAccessToken(userDetails, ACCESS_EXPIRATION)
         val newRefreshToken = jwtUtil.createRefreshToken(userDetails, REFRESH_EXPIRATION)
 
-        redisRepository.remove(userDetails.username)
-        redisRepository.save(userDetails.username, newRefreshToken, REFRESH_EXPIRATION, TimeUnit.MILLISECONDS)
+        userDetails.username?.let { redisRepository.remove(it) }
+        userDetails.username?.let {
+            redisRepository.save(it, newRefreshToken, REFRESH_EXPIRATION, TimeUnit.MILLISECONDS)
+        }
 
         AuthResponseUtil.success(
             resp,

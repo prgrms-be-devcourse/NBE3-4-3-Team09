@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -119,7 +120,8 @@ public class SchedulerService {
 				//만약 있다면 Redis에서 VALUE 조회해서 jobSkill 객체 생성
 				if (hasKeyResult) {
 					//JobSkillId 가져오는 로직
-					Long jobSkillId = Long.valueOf(redisRepository.get(key).toString());
+					Object value = redisRepository.get(key);
+					long jobSkillId = Long.parseLong(Objects.requireNonNull(value).toString());
 
 					//JobSkill 생성
 					JobSkill jobSkill = new JobSkill(jobSkillId);
