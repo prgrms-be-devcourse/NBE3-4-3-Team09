@@ -6,41 +6,37 @@ import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import java.time.ZonedDateTime;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
 
 /**
  * BaseEntity
  * <p>엔티티 생성, 수정 일자를 관리하는 BaseEntity 입니다.</p>
  * @author Kim Dong O
  */
-@Getter
 @MappedSuperclass
-@SuperBuilder // @SuperBuilder 추가
-@NoArgsConstructor
-public abstract class BaseEntity {
+abstract class BaseEntity {
 
 	/**
 	 * 생성일시
 	 */
 	@Column(name = "created_at")
-	private ZonedDateTime createdAt;
+	lateinit var createdAt: ZonedDateTime
+		protected set
 
 	/**
 	 * 수정일시
 	 */
 	@Column(name = "modified_at")
-	private ZonedDateTime modifiedAt;
+	lateinit var modifiedAt: ZonedDateTime
+		protected set
 
 	@PrePersist
-	public void prePersist() {
+	fun prePersist() {
 		this.createdAt = ZonedDateTime.now();
 		this.modifiedAt = ZonedDateTime.now();
 	}
 
 	@PreUpdate
-	public void preUpdate() {
+	fun preUpdate() {
 		this.modifiedAt = ZonedDateTime.now();
 	}
 }

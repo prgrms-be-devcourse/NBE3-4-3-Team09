@@ -5,7 +5,7 @@ import com.backend.global.baseentity.BaseEntity
 import jakarta.persistence.*
 
 @Entity
-class Category(): BaseEntity() {
+class Category: BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,9 +21,10 @@ class Category(): BaseEntity() {
     val postList: List<Post>
         get() = _postList.toList()
 
-    constructor(name: String) : this() {
+    constructor(name: String) : super() {
         this.name = name
     }
+
 
     // equals() 재정의: id와 name을 기준으로 비교
     override fun equals(other: Any?): Boolean {
