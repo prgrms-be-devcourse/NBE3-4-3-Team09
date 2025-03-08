@@ -70,12 +70,6 @@ class ApiV1UserControllerTest {
     void setUp() {
         userRepository.deleteAll();
 
-//        testUser = userRepository.save(SiteUser.builder()
-//                .email("test@test.com")
-//                .password("password")
-//                .name("testUser")
-//                .userRole(UserRole.ROLE_USER.toString())
-//                .build());
         testUser = userRepository.save(
                 new SiteUser(
                         "test@test.com",
@@ -85,12 +79,6 @@ class ApiV1UserControllerTest {
                 )
         );
 
-//        otherUser = userRepository.save(SiteUser.builder()
-//                .email("other@test.com")
-//                .password("password")
-//                .name("otherUser")
-//                .userRole(UserRole.ROLE_USER.toString())
-//                .build());
         otherUser = userRepository.save(
                 new SiteUser(
                         "other@test.com",
@@ -109,13 +97,6 @@ class ApiV1UserControllerTest {
     @DisplayName("프로필 조회 성공")
     @CustomWithMock
     void test1() throws Exception {
-
-//        SiteUser siteUser = SiteUser.builder()
-//                .email("test1@test.com")
-//                .password(passwordEncoder.encode("password"))
-//                .name("test1")
-//                .userRole(UserRole.ROLE_ADMIN.toString())
-//                .build();
         SiteUser siteUser = new SiteUser(
                 "test1@test.com",
                 "test1",
@@ -243,9 +224,9 @@ class ApiV1UserControllerTest {
         SiteUser updatedUser = userRepository.findById(siteUser.getId()).orElseThrow();
         assertThat(updatedUser.getIntroduction()).isEqualTo("자기소개수정");
         assertThat(updatedUser.getJob()).isEqualTo("직업수정");
-//        assertThat(updatedUser.getJobSkills()).hasSize(2);
-//        assertThat(updatedUser.getJobSkills().get(0).getName()).isEqualTo("직무1");
-//        assertThat(updatedUser.getJobSkills().get(1).getName()).isEqualTo("직무2");
+        assertThat(updatedUser.getJobSkillList()).hasSize(2);
+        assertThat(updatedUser.getJobSkillList().get(0).getName()).isEqualTo("직무1");
+        assertThat(updatedUser.getJobSkillList().get(1).getName()).isEqualTo("직무2");
     }
 
     @Test

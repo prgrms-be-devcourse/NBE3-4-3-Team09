@@ -67,18 +67,14 @@ class UserService(
 
         val user = getUserById(id)
 
-        // TODO
-        // 현재는 jobskill의  name이 private로 설정되어 있어서 접근이 불가능함
-        // 다음 작업에서 처리 예정
-//        if (req.jobSkills != null) {
-//            user.jobSkills.clear()
-//
-//            req.jobSkills!!.forEach(Consumer { jobSkillReq: JobSkillRequest ->
-//                val jobSkill = jobSkillRepository!!.findByName(jobSkillReq.name)
-//                    .orElseThrow { GlobalException(GlobalErrorCode.INVALID_JOB_SKILL) }
-//                user.jobSkills.add(jobSkill)
-//            })
-//        }
+        req.jobSkills?.let { skillReqs ->
+            val skills = skillReqs.mapNotNull { skillReq ->
+                skillReq.name?.let { name ->
+                    jobSkillRepository.findByName(name)
+                }
+            }
+            user?.updateJobSkills(skills)
+        }
 
         user?.modifyProfile(req.introduction, req.job)
     }
